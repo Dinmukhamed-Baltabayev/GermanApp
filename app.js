@@ -90,7 +90,7 @@
     isFlipping = true;
 
     const onBackBeforeFlip = angle % 360 === 180;
-    playCardFlipSound(!onBackBeforeFlip);
+     playCardFlipSound(onBackBeforeFlip);
     const nextAngle = angle + 180;
     const swapDelayMs = Math.round(spinDurationMs * 0.5);
 
