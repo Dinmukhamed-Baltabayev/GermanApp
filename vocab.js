@@ -1,52 +1,42 @@
 window.VOCAB_WORDS = [
   {
     de: "der Apfel",
-    en: "apple",
-    ex: "Ich esse einen Apfel."
+    en: "apple"
   },
   {
     de: "das Buch",
-    en: "book",
-    ex: "Das Buch ist interessant."
+    en: "book"
   },
   {
     de: "die Schule",
-    en: "school",
-    ex: "Die Schule beginnt um acht Uhr."
+    en: "school"
   },
   {
     de: "lernen",
-    en: "to learn",
-    ex: "Wir lernen heute neue Woerter."
+    en: "to learn"
   },
   {
     de: "sprechen",
-    en: "to speak",
-    ex: "Ich spreche ein bisschen Deutsch."
+    en: "to speak"
   },
   {
     de: "schnell",
-    en: "fast",
-    ex: "Der Zug ist sehr schnell."
+    en: "fast"
   },
   {
     de: "langsam",
-    en: "slow",
-    ex: "Bitte sprich langsam."
+    en: "slow"
   },
   {
     de: "der Freund",
-    en: "friend",
-    ex: "Er ist mein bester Freund."
+    en: "friend"
   },
   {
     de: "die Stadt",
-    en: "city",
-    ex: "Berlin ist eine grosse Stadt."
+    en: "city"
   },
   {
     de: "heute",
-    en: "today",
-    ex: "Heute lerne ich zehn neue Woerter."
+    en: "today"
   }
 ];

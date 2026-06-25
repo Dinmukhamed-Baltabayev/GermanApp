@@ -28,7 +28,7 @@ Update `vocab.js`:
 
 ```js
 window.VOCAB_WORDS = [
-  { de: "der Apfel", en: "apple", ex: "Ich esse einen Apfel." }
+  { de: "der Apfel", en: "apple" }
 ];
 ```
 
@@ -36,4 +36,3 @@ Fields:
 
 - `de`: German word or phrase
 - `en`: English translation
-- `ex`: Example sentence (optional)

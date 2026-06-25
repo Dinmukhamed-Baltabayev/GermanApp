@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Manrope:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -23,6 +23,12 @@
         <button id="shuffleBtn" class="ghost-btn" aria-label="Shuffle cards">Shuffle</button>
       </header>
 
+      <section class="speed-bar" aria-label="Spin speed control">
+        <label for="speedRange">Spin Speed</label>
+        <input id="speedRange" type="range" min="450" max="1600" step="50" value="900" />
+        <span id="speedValue">900 ms</span>
+      </section>
+
       <main class="stage" aria-live="polite">
         <p class="progress" id="progressText">1 / 1</p>
 
@@ -35,12 +41,11 @@
             <div class="card-face card-back" aria-hidden="true">
               <p class="face-label">English</p>
               <h3 id="backText">Word</h3>
-              <p class="example" id="exampleText"></p>
             </div>
           </article>
         </section>
 
-        <p class="hint">Swipe up = Learned, swipe down = Again. Tap card to flip.</p>
+        <p class="hint">Tap to spin 360 deg: see English briefly, then next German word</p>
       </main>
 
       <footer class="controls">
