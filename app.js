@@ -15,12 +15,12 @@
   let index = 0;
   let shownCount = 0;
   let isDragging = false;
-  let startX = 0;
-  let currentX = 0;
+  let startY = 0;
+  let currentY = 0;
 
   if (!words.length) {
     frontText.textContent = "No words";
-    backText.textContent = "Add items in data/vocab.js";
+    backText.textContent = "Add items in vocab.js";
     exampleText.textContent = "";
     progressText.textContent = "0 / 0";
     return;
@@ -38,11 +38,11 @@
     return words[index % words.length];
   }
 
-  function nextCard(moveRight) {
-    card.classList.add(moveRight ? "swipe-right" : "swipe-left");
+  function nextCard(moveUp) {
+    card.classList.add(moveUp ? "swipe-up" : "swipe-down");
 
     setTimeout(function () {
-      card.classList.remove("swipe-right", "swipe-left");
+      card.classList.remove("swipe-up", "swipe-down");
       index += 1;
       shownCount += 1;
       if (index >= words.length) {
@@ -68,8 +68,8 @@
 
   function onPointerDown(event) {
     isDragging = true;
-    startX = event.clientX;
-    currentX = event.clientX;
+    startY = event.clientY;
+    currentY = event.clientY;
     card.setPointerCapture(event.pointerId);
     card.style.transition = "none";
   }
@@ -78,10 +78,10 @@
     if (!isDragging) {
       return;
     }
-    currentX = event.clientX;
-    const dx = currentX - startX;
-    const tilt = dx / 16;
-    card.style.transform = `translateX(${dx}px) rotate(${tilt}deg)`;
+    currentY = event.clientY;
+    const dy = currentY - startY;
+    const tilt = -dy / 24;
+    card.style.transform = `translateY(${dy}px) rotate(${tilt}deg)`;
   }
 
   function onPointerUp(event) {
@@ -89,14 +89,14 @@
       return;
     }
 
-    const dx = currentX - startX;
+    const dy = currentY - startY;
     const threshold = 90;
 
     isDragging = false;
     card.releasePointerCapture(event.pointerId);
     card.style.transition = "transform 0.25s ease";
 
-    if (Math.abs(dx) < threshold) {
+    if (Math.abs(dy) < threshold) {
       card.style.transform = "";
       setTimeout(function () {
         card.style.transition = "";
@@ -107,7 +107,7 @@
     card.style.transform = "";
     setTimeout(function () {
       card.style.transition = "";
-      nextCard(dx > 0);
+      nextCard(dy < 0);
     }, 10);
   }
 
