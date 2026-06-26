@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-shell">
+    <div class="app-shell" id="appShell">
       <header class="topbar">
         <div>
           <p class="kicker">Deutsch Trainer</p>
@@ -45,13 +45,11 @@
           </article>
         </section>
 
-        <p class="hint">Tap card: German to English, then tap again for next German word.</p>
+        <p class="hint">Spin mode repeats the same word. Stop to keep that same word on screen.</p>
       </main>
 
       <footer class="controls">
-        <button id="againBtn" class="action-btn negative" aria-label="Mark as again">Again</button>
-        <button id="flipBtn" class="action-btn neutral" aria-label="Flip card">Flip</button>
-        <button id="learnedBtn" class="action-btn positive" aria-label="Mark as learned">Learned</button>
+        <button id="spinToggleBtn" class="action-btn spin-toggle" aria-label="Start spinning">Spin to Learn</button>
       </footer>
     </div>
 
@@ -59,3 +57,4 @@
     <script src="app.js"></script>
   </body>
 </html>
+

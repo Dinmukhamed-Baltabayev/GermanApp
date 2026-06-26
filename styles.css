@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg-1: #f7f4ef;
   --bg-2: #efe6d6;
   --paper: #fffaf1;
@@ -133,16 +133,16 @@ h1 {
 }
 
 .card {
-  width: 100%;
-  height: min(64dvh, 460px);
-  max-height: 490px;
-  min-height: 360px;
+  width: min(100%, 420px);
+  aspect-ratio: 3 / 4;
+  height: auto;
   border-radius: var(--radius-xl);
   border: 1px solid #efe1c8;
   background: var(--paper);
   box-shadow: 0 24px 50px rgba(89, 71, 33, 0.16);
   position: relative;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
@@ -157,12 +157,12 @@ h1 {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   border-radius: inherit;
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  gap: 14px;
-  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 30px 30px;
   text-align: center;
 }
 
@@ -179,6 +179,10 @@ h1 {
 
 .face-label {
   margin: 0;
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -211,7 +215,7 @@ h3 {
 
 .controls {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 8px;
   padding-top: 2px;
 }
@@ -224,22 +228,33 @@ h3 {
   color: var(--ink);
 }
 
-.negative {
-  background: var(--bad-bg);
-  color: var(--bad);
-}
-
-.neutral {
-  background: var(--neutral-bg);
-}
-
-.positive {
+.spin-toggle {
   background: var(--good-bg);
   color: var(--good);
 }
 
+.app-shell.is-spinning .spin-toggle {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+
+.app-shell.is-spinning .card {
+  pointer-events: none;
+}
+
+.app-shell.is-spinning #shuffleBtn,
+.app-shell.is-spinning #speedRange {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
 button {
   cursor: pointer;
+}
+
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
 }
 
 @media (max-width: 360px) {
@@ -248,8 +263,12 @@ button {
     border-radius: 22px;
   }
 
-  .card {
-    min-height: 330px;
+  .card-face {
+    padding: 58px 22px 24px;
+  }
+
+  .face-label {
+    top: 20px;
   }
 
   .action-btn {

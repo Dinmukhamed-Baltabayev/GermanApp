@@ -1,6 +1,7 @@
-(function () {
+﻿(function () {
   const words = Array.isArray(window.VOCAB_WORDS) ? [...window.VOCAB_WORDS] : [];
 
+  const appShell = document.getElementById("appShell");
   const card = document.getElementById("flashcard");
   const frontText = document.getElementById("frontText");
   const backText = document.getElementById("backText");
@@ -8,9 +9,7 @@
   const speedRange = document.getElementById("speedRange");
   const speedValue = document.getElementById("speedValue");
 
-  const againBtn = document.getElementById("againBtn");
-  const learnedBtn = document.getElementById("learnedBtn");
-  const flipBtn = document.getElementById("flipBtn");
+  const spinToggleBtn = document.getElementById("spinToggleBtn");
   const shuffleBtn = document.getElementById("shuffleBtn");
 
   let index = 0;
@@ -19,11 +18,16 @@
   let angle = 0;
   let spinDurationMs = Number(speedRange.value) || 150;
   let audioCtx = null;
+  let isAutoSpinning = false;
+  let autoSpinTimer = null;
 
   if (!words.length) {
     frontText.textContent = "No words";
     backText.textContent = "Add items in vocab.js";
     progressText.textContent = "0 / 0";
+    spinToggleBtn.disabled = true;
+    shuffleBtn.disabled = true;
+    speedRange.disabled = true;
     return;
   }
 
@@ -83,23 +87,21 @@
     osc.stop(now + duration);
   }
 
-  function flipCard() {
+  function flipCard(advanceWord) {
     if (isFlipping) {
       return;
     }
     isFlipping = true;
 
     const onBackBeforeFlip = angle % 360 === 180;
-     playCardFlipSound(onBackBeforeFlip);
+    playCardFlipSound(onBackBeforeFlip);
     const nextAngle = angle + 180;
     const swapDelayMs = Math.round(spinDurationMs * 0.5);
 
-    // Keep direction consistent by always rotating forward by +180deg.
     card.style.transition = `transform ${spinDurationMs}ms linear`;
     card.style.transform = `rotateY(${nextAngle}deg)`;
 
-    // If currently showing English, this click should land on next German word.
-    if (onBackBeforeFlip) {
+    if (advanceWord && onBackBeforeFlip) {
       setTimeout(function () {
         index = (index + 1) % words.length;
         shownCount += 1;
@@ -109,36 +111,57 @@
 
     setTimeout(function () {
       angle = nextAngle % 360;
+      const stableAngle = angle === 180 ? 179.9 : angle;
       card.style.transition = "none";
-      card.style.transform = `rotateY(${angle}deg)`;
+      card.style.transform = `rotateY(${stableAngle}deg)`;
       void card.getBoundingClientRect();
       isFlipping = false;
     }, spinDurationMs + 20);
   }
 
-  function nextWord() {
-    if (isFlipping) {
+  function scheduleAutoSpin() {
+    if (!isAutoSpinning) {
       return;
     }
 
-    index = (index + 1) % words.length;
-    shownCount += 1;
-    loadCard();
+    flipCard(false);
+    autoSpinTimer = setTimeout(function () {
+      scheduleAutoSpin();
+    }, spinDurationMs + 40);
+  }
 
-    angle = 0;
-    card.style.transition = "none";
-    card.style.transform = "rotateY(0deg)";
-    void card.getBoundingClientRect();
+  function setSpinMode(enabled) {
+    isAutoSpinning = enabled;
+
+    if (enabled) {
+      appShell.classList.add("is-spinning");
+      spinToggleBtn.textContent = "Stop Spinning";
+      spinToggleBtn.setAttribute("aria-label", "Stop spinning");
+      speedRange.disabled = true;
+      shuffleBtn.disabled = true;
+      scheduleAutoSpin();
+      return;
+    }
+
+    clearTimeout(autoSpinTimer);
+    autoSpinTimer = null;
+    appShell.classList.remove("is-spinning");
+    spinToggleBtn.textContent = "Spin to Learn";
+    spinToggleBtn.setAttribute("aria-label", "Start spinning");
+    speedRange.disabled = false;
+    shuffleBtn.disabled = false;
   }
 
   function shuffle() {
-    if (isFlipping) {
+    if (isFlipping || isAutoSpinning) {
       return;
     }
+
     for (let i = words.length - 1; i > 0; i -= 1) {
       const j = Math.floor(Math.random() * (i + 1));
       [words[i], words[j]] = [words[j], words[i]];
     }
+
     index = 0;
     shownCount = 0;
     angle = 0;
@@ -148,18 +171,34 @@
   }
 
   card.addEventListener("keydown", function (event) {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      flipCard();
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
     }
+
+    event.preventDefault();
+    if (isAutoSpinning) {
+      return;
+    }
+    flipCard(true);
   });
 
-  card.addEventListener("click", flipCard);
-  againBtn.addEventListener("click", nextWord);
-  learnedBtn.addEventListener("click", nextWord);
-  flipBtn.addEventListener("click", flipCard);
+  card.addEventListener("click", function () {
+    if (isAutoSpinning) {
+      return;
+    }
+    flipCard(true);
+  });
+
+  spinToggleBtn.addEventListener("click", function () {
+    setSpinMode(!isAutoSpinning);
+  });
+
   shuffleBtn.addEventListener("click", shuffle);
+
   speedRange.addEventListener("input", function () {
+    if (isAutoSpinning) {
+      return;
+    }
     spinDurationMs = Number(speedRange.value) || 150;
     updateSpeedLabel();
   });
@@ -167,3 +206,4 @@
   updateSpeedLabel();
   loadCard();
 })();
+
